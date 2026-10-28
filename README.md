@@ -1,4 +1,31 @@
-# Welcome to your Expo app 👋
+# Projet catalogue de médias de la nasa
+
+SPA catalogue de médias (photographies, vidéos, sons).
+
+L'application permet aux utilisateurs de rechercher des médias pour consulter et commenter le contenu.
+
+La recherche peut s'effectuer via les filtres :
+- Mot clé (basé sur le titre du media)
+- Type de média
+- Photographe
+- periode de publication (début et fin)
+
+Elle comporte 3 types d'utilisateurs :
+- les utilisateurs peuvent consulter et commenter des médias.
+- les photographes peuvent, en plus des actions des utilisateurs, publier des médias.
+- les administrateurs gèrent l'ensemble des entrées (médias, utilisateurs, commentaires).
+
+## Membres
+- Adrien Leclere (Partie A)
+- Mathis Dauguet (Partie B)
+- Allan Decaux (Partie C)
+
+## Api utilisée
+
+NASA Image and Video Library
+- Endpoints : https://api.nasa.gov/
+- documentation : https://images.nasa.gov/docs/images.nasa.gov_api_docs.pdf
+
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
