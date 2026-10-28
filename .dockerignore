@@ -1,0 +1,14 @@
+node_modules
+dist
+web-build
+.expo
+.git
+.github
+.vscode
+.claude
+ios
+android
+*.log
+.env*.local
+Dockerfile
+.dockerignore
