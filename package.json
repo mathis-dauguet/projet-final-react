@@ -4,6 +4,7 @@
   "main": "expo-router/entry",
   "dependencies": {
     "@expo/ui": "~58.0.23",
+    "@react-native-async-storage/async-storage": "^3.1.1",
     "compression": "^1.8.2",
     "expo": "~58.0.19",
     "expo-constants": "~58.0.13",
@@ -20,6 +21,7 @@
     "expo-system-ui": "~58.0.6",
     "expo-web-browser": "~58.0.6",
     "express": "^5.3.0",
+    "firebase": "^13.1.0",
     "morgan": "^1.12.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
