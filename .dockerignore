@@ -12,4 +12,3 @@ android
 .env*.local
 Dockerfile
 .dockerignore
-docker-compose.yml
