@@ -1,18 +1,18 @@
 import { Image } from "expo-image";
-import { StyleSheet, Text, View } from "react-native";
+import { ShoppingCartPlus } from "lucide-react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
+import { useCart } from "@/context/cart-context";
 import { Album } from "@/models/album";
+import { formatPrice } from "@/utils/format-price";
 
 type AlbumCardProps = {
   album: Album;
 };
 
-const priceFormatter = new Intl.NumberFormat("fr-FR", {
-  style: "currency",
-  currency: "EUR",
-});
-
 export function AlbumCard({ album }: AlbumCardProps) {
+  const { addToCart } = useCart();
+
   return (
     <View style={styles.card}>
       <Image source={album.coverUrl} style={styles.cover} alt={album.title} />
@@ -21,7 +21,17 @@ export function AlbumCard({ album }: AlbumCardProps) {
       <Text style={styles.subtitle}>
         {album.artist} · {album.year}
       </Text>
-      <Text style={styles.price}>{priceFormatter.format(album.price)}</Text>
+      <View style={styles.footer}>
+        <Text style={styles.price}>{formatPrice(album.price)}</Text>
+        <Pressable
+          onPress={() => addToCart(album)}
+          disabled={!album.inStock}
+          accessibilityLabel={`Ajouter ${album.title} au panier`}
+          style={[styles.addButton, !album.inStock && styles.addButtonDisabled]}
+        >
+          <ShoppingCartPlus size={20} color="#fff" />
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -53,9 +63,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#555",
   },
+  footer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 4,
+  },
   price: {
     fontSize: 16,
     fontWeight: "600",
-    marginTop: 4,
+  },
+  addButton: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: "#111",
+  },
+  addButtonDisabled: {
+    backgroundColor: "#ccc",
   },
 });

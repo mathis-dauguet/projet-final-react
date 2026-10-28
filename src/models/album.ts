@@ -1,4 +1,4 @@
-export type Genre = "jazz" | "electro" | "rock" | "hip-hop" | "pop";
+export type Genre  = "jazz" | "electro" | "rock" | "hip-hop" | "pop";
 
 export interface Album {
   id: string;
@@ -10,3 +10,5 @@ export interface Album {
   inStock: boolean;
   coverUrl: string;
 }
+
+const GENRES: Genre[] = ["jazz", "electro", "rock", "hip-hop", "pop"];
