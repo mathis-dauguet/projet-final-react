@@ -3,6 +3,7 @@ export type Role = (typeof ROLES)[number];
 
 export interface User {
   id: string;
+  email: string;
   name: string;
   role: Role;
   created_at: Date;
