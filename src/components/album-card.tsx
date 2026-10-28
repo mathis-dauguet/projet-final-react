@@ -32,8 +32,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: "#fff",
     gap: 4,
-    minWidth: 160,
-    maxWidth: 200,
     flex: 1,
   },
   cover: {

@@ -1,25 +1,33 @@
-import { Text, View, StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import { AlbumCard } from "@/components/album-card";
 import { ALBUMS } from "@/data/albums";
+import { useColumns } from "@/hooks/use-columns";
 
 export default function Index() {
+  const columns = useColumns();
+
   return (
-    <View style={styles.container}>
-      {ALBUMS.map((album) => (
-        <AlbumCard key={album.id} album={album} />
-      ))}
-    </View>
+    <FlatList
+      key={columns}
+      data={ALBUMS}
+      keyExtractor={(album) => album.id}
+      renderItem={({ item }) => <AlbumCard album={item} />}
+      numColumns={columns}
+      columnWrapperStyle={columns > 1 ? styles.row : undefined}
+      contentContainerStyle={styles.container}
+    />
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
-    flexWrap: "wrap",
+    width: "100%",
+    maxWidth: 1280,
+    alignSelf: "center",
     gap: 12,
     padding: 12,
+  },
+  row: {
+    gap: 12,
   },
 });
