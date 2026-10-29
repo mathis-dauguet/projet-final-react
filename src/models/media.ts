@@ -7,6 +7,7 @@ export interface Media {
   type: MediaType;
   size: number | null;
   path: string;
+  thumbnail: string | null;
   author_id: string;
   created_at: Date;
   updated_at: Date;
