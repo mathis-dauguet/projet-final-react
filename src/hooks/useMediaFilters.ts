@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 
 import { useDebounce } from "@/hooks/useDebounce";
 import type { MediaType } from "@/models/media";
-import type { SearchParams } from "@/services/nasa";
+import { PAGE_SIZE, type SearchParams } from "@/services/nasa";
 
 export type TypeFilter = "all" | MediaType;
 
@@ -14,13 +14,21 @@ export function useMediaFilters() {
   const [type, setType] = useState<TypeFilter>("all");
   const debouncedSearch = useDebounce(search.trim().toLowerCase(), SEARCH_DELAY_MS);
 
+  // La page est liée aux filtres : si un filtre change, on revient à la page 1
+  const filtersKey = `${debouncedSearch}|${type}`;
+  const [pageState, setPageState] = useState({ filtersKey, page: 1 });
+  const page = pageState.filtersKey === filtersKey ? pageState.page : 1;
+  const setPage = (value: number) => setPageState({ filtersKey, page: value });
+
   const params = useMemo<SearchParams>(
     () => ({
       q: debouncedSearch || DEFAULT_QUERY,
       media_type: type === "all" ? undefined : type,
+      page,
+      page_size: PAGE_SIZE,
     }),
-    [debouncedSearch, type],
+    [debouncedSearch, type, page],
   );
 
-  return { search, setSearch, type, setType, params };
+  return { search, setSearch, type, setType, page, setPage, params };
 }

@@ -1,20 +1,25 @@
 import { Stack } from "expo-router";
+import Head from "expo-router/head";
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 
 import { MediaCard } from "@/components/MediaCard";
 import { MediaFilters } from "@/components/MediaFilters";
+import { Pagination } from "@/components/Pagination";
 import { useColumns } from "@/hooks/useColumns";
 import { useMediaFilters } from "@/hooks/useMediaFilters";
 import { useMedias } from "@/hooks/useMedias";
 
 export default function Catalogue() {
-  const { search, setSearch, type, setType, params } = useMediaFilters();
-  const { medias, loading, error } = useMedias(params);
+  const { search, setSearch, type, setType, page, setPage, params } = useMediaFilters();
+  const { medias, totalPages, loading, error } = useMedias(params);
   const columns = useColumns();
 
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: "Catalogue" }} />
+      <Head>
+        <title>Catalogue · Cosmos Gallery</title>
+      </Head>
       <MediaFilters search={search} onSearchChange={setSearch} type={type} onTypeChange={setType} />
 
       {loading ? (
@@ -34,6 +39,7 @@ export default function Catalogue() {
               <MediaCard media={item} variant={columns > 1 ? "grid" : "list"} />
             </View>
           )}
+          ListFooterComponent={<Pagination page={page} totalPages={totalPages} onChange={setPage} />}
           ListEmptyComponent={<Text style={styles.empty}>Aucun média ne correspond aux filtres.</Text>}
         />
       )}

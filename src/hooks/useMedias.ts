@@ -6,6 +6,7 @@ import { searchMedias, type SearchParams } from "@/services/nasa";
 interface Result {
   key: string;
   medias: Media[];
+  total_pages: number;
   error: string | null;
 }
 
@@ -21,10 +22,12 @@ export function useMedias(params: SearchParams) {
     const controller = new AbortController();
 
     searchMedias(params, controller.signal)
-      .then((medias) => setResult({ key, medias: sortByDateDesc(medias), error: null }))
+      .then(({ medias, total_pages }) =>
+        setResult({ key, medias: sortByDateDesc(medias), total_pages, error: null }),
+      )
       .catch((err: unknown) => {
         if (controller.signal.aborted) return;
-        setResult({ key, medias: [], error: err instanceof Error ? err.message : "Erreur inconnue" });
+        setResult({ key, medias: [], total_pages: 0, error: err instanceof Error ? err.message : "Erreur inconnue" });
       });
 
     return () => controller.abort();
@@ -32,6 +35,7 @@ export function useMedias(params: SearchParams) {
 
   return {
     medias: result?.medias ?? [],
+    totalPages: result?.total_pages ?? 0,
     loading: result?.key !== key,
     error: result?.error ?? null,
   };

@@ -1,6 +1,9 @@
 import type { Media, MediaType } from "@/models/media";
 
 const API_URL = "https://images-api.nasa.gov";
+const MAX_RESULTS = 10000;
+
+export const PAGE_SIZE = 24;
 
 interface NasaItemData {
   nasa_id: string;
@@ -39,6 +42,11 @@ export interface SearchParams {
   page_size?: number;
 }
 
+export interface SearchResult {
+  medias: Media[];
+  total_pages: number;
+}
+
 function toMedia(item: NasaItem): Media {
   const data = item.data[0];
   const preview = item.links?.find((link) => link.rel === "preview");
@@ -61,9 +69,9 @@ function toMedia(item: NasaItem): Media {
 }
 
 export async function searchMedias(
-  { q, media_type, page = 1, page_size = 60 }: SearchParams,
+  { q, media_type, page = 1, page_size = PAGE_SIZE }: SearchParams,
   signal?: AbortSignal,
-): Promise<Media[]> {
+): Promise<SearchResult> {
   const params = new URLSearchParams({ q, page: String(page), page_size: String(page_size) });
   if (media_type) {
     params.set("media_type", media_type);
@@ -75,5 +83,10 @@ export async function searchMedias(
   }
 
   const json: NasaSearchResponse = await response.json();
-  return json.collection.items.map(toMedia);
+  const totalHits = json.collection.metadata.total_hits;
+
+  return {
+    medias: json.collection.items.map(toMedia),
+    total_pages: Math.min(Math.ceil(totalHits / page_size), Math.floor(MAX_RESULTS / page_size)),
+  };
 }
