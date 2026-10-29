@@ -8,8 +8,8 @@ import { useMediaFilters } from "@/hooks/useMediaFilters";
 import { useMedias } from "@/hooks/useMedias";
 
 export default function Catalogue() {
-  const { medias, loading, error } = useMedias();
-  const { search, setSearch, type, setType, filtered } = useMediaFilters(medias);
+  const { search, setSearch, type, setType, params } = useMediaFilters();
+  const { medias, loading, error } = useMedias(params);
   const columns = useColumns();
 
   return (
@@ -24,7 +24,7 @@ export default function Catalogue() {
       ) : (
         <FlatList
           key={columns}
-          data={filtered}
+          data={medias}
           numColumns={columns}
           keyExtractor={(media) => media.id}
           contentContainerStyle={styles.list}

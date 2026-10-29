@@ -1,33 +1,34 @@
 import { useEffect, useState } from "react";
 
 import type { Media } from "@/models/media";
-import { searchMedias } from "@/services/nasa";
+import { searchMedias, type SearchParams } from "@/services/nasa";
 
-const DEFAULT_QUERY = "space";
+interface Result {
+  key: string;
+  medias: Media[];
+  error: string | null;
+}
 
-export function useMedias() {
-  const [medias, setMedias] = useState<Media[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export function useMedias(params: SearchParams) {
+  const key = JSON.stringify(params);
+  const [result, setResult] = useState<Result | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
 
-    searchMedias({ q: DEFAULT_QUERY })
-      .then((result) => {
-        if (!cancelled) setMedias(result);
-      })
+    searchMedias(params, controller.signal)
+      .then((medias) => setResult({ key, medias, error: null }))
       .catch((err: unknown) => {
-        if (!cancelled) setError(err instanceof Error ? err.message : "Erreur inconnue");
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (controller.signal.aborted) return;
+        setResult({ key, medias: [], error: err instanceof Error ? err.message : "Erreur inconnue" });
       });
 
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+    return () => controller.abort();
+  }, [key, params]);
 
-  return { medias, loading, error };
+  return {
+    medias: result?.medias ?? [],
+    loading: result?.key !== key,
+    error: result?.error ?? null,
+  };
 }

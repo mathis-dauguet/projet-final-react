@@ -60,13 +60,16 @@ function toMedia(item: NasaItem): Media {
   };
 }
 
-export async function searchMedias({ q, media_type, page = 1, page_size = 60 }: SearchParams): Promise<Media[]> {
+export async function searchMedias(
+  { q, media_type, page = 1, page_size = 60 }: SearchParams,
+  signal?: AbortSignal,
+): Promise<Media[]> {
   const params = new URLSearchParams({ q, page: String(page), page_size: String(page_size) });
   if (media_type) {
     params.set("media_type", media_type);
   }
 
-  const response = await fetch(`${API_URL}/search?${params}`);
+  const response = await fetch(`${API_URL}/search?${params}`, { signal });
   if (!response.ok) {
     throw new Error(`NASA API error: ${response.status}`);
   }
