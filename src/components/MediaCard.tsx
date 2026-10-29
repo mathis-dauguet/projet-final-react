@@ -36,7 +36,8 @@ export function MediaCard({ media, variant }: Props) {
           {media.name}
         </Text>
         <Text style={styles.meta} numberOfLines={1}>
-          {TYPE_LABELS[media.type]} · {media.author_id}
+          {TYPE_LABELS[media.type]}
+          {media.credit ? ` · ${media.credit}` : ""}
         </Text>
       </View>
     </View>

@@ -47,12 +47,14 @@ function toMedia(item: NasaItem): Media {
 
   return {
     id: data.nasa_id,
+    source: "nasa",
     name: data.title,
     type: data.media_type,
     size: canonical?.size ?? null,
     path: encodeURI(canonical?.href ?? item.href),
     thumbnail: preview ? encodeURI(preview.href) : null,
-    author_id: data.photographer ?? data.secondary_creator ?? data.center ?? "NASA",
+    author_id: null,
+    credit: data.photographer ?? data.secondary_creator ?? data.center ?? "NASA",
     created_at: createdAt,
     updated_at: createdAt,
   };
