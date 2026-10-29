@@ -26,7 +26,7 @@ export default function Catalogue() {
           key={columns}
           data={medias}
           numColumns={columns}
-          keyExtractor={(media) => media.id}
+          keyExtractor={(media) => `${media.source}:${media.id}`}
           contentContainerStyle={styles.list}
           columnWrapperStyle={columns > 1 ? styles.row : undefined}
           renderItem={({ item }) => (
