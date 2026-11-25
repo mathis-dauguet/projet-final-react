@@ -10,3 +10,8 @@ export interface User {
   updated_at: Date;
   deleted_at: Date | null;
 }
+
+export type AppUser = {
+  uid: string;
+  email: string;
+};
