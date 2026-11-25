@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { COLORS, RADIUS } from "@/constants/theme";
 
 interface Props {
   page: number;
@@ -63,34 +64,36 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "center",
     alignItems: "center",
-    gap: 6,
-    paddingVertical: 16,
+    gap: 8,
+    paddingVertical: 24,
   },
   button: {
-    minWidth: 36,
-    height: 36,
-    paddingHorizontal: 8,
-    borderRadius: 8,
+    minWidth: 34,
+    height: 33,
+    paddingHorizontal: 10,
+    borderRadius: RADIUS.sm,
     borderWidth: 1,
-    borderColor: "#0b3d91",
+    borderColor: COLORS.border,
+    backgroundColor: COLORS.surface,
     alignItems: "center",
     justifyContent: "center",
   },
   buttonActive: {
-    backgroundColor: "#0b3d91",
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
   },
   buttonDisabled: {
-    opacity: 0.3,
+    opacity: 0.4,
   },
   label: {
-    color: "#0b3d91",
+    color: COLORS.muted,
     fontWeight: "600",
   },
   labelActive: {
-    color: "#fff",
+    color: COLORS.text,
   },
   dots: {
-    color: "#666",
+    color: COLORS.muted,
     paddingHorizontal: 4,
   },
 });

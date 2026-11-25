@@ -2,6 +2,8 @@ import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";
 
 import { FavoriteButton } from "@/components/FavoriteButton";
+import { COLORS, RADIUS } from "@/constants/theme";
+import { useAuth } from "@/hooks/useAuth";
 import type { Media, MediaType } from "@/models/media";
 
 export const TYPE_LABELS: Record<MediaType, string> = {
@@ -10,37 +12,40 @@ export const TYPE_LABELS: Record<MediaType, string> = {
   audio: "Audio",
 };
 
+const DATE_FORMAT = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", year: "numeric" });
+
 interface Props {
   media: Media;
   variant: "grid" | "list";
 }
 
 export function MediaCard({ media, variant }: Props) {
+  const { user } = useAuth();
   const isList = variant === "list";
+  const thumbnailStyle = isList ? styles.thumbnailList : styles.thumbnailGrid;
 
   return (
     <View style={[styles.card, isList && styles.cardList]}>
       {media.thumbnail ? (
-        <Image
-          source={media.thumbnail}
-          style={isList ? styles.thumbnailList : styles.thumbnailGrid}
-          contentFit="cover"
-          transition={200}
-        />
+        <Image source={media.thumbnail} style={thumbnailStyle} contentFit="cover" transition={200} />
       ) : (
-        <View style={[isList ? styles.thumbnailList : styles.thumbnailGrid, styles.placeholder]}>
+        <View style={[thumbnailStyle, styles.placeholder]}>
           <Text style={styles.placeholderText}>{TYPE_LABELS[media.type]}</Text>
         </View>
       )}
       <View style={styles.body}>
-        <Text style={styles.title} numberOfLines={2}>
-          {media.name}
+        <View style={styles.titleRow}>
+          <Text style={[styles.title, !isList && styles.titleGrid]} numberOfLines={2}>
+            {media.name}
+          </Text>
+          {user && <FavoriteButton media={media} />}
+        </View>
+        <Text style={styles.credit} numberOfLines={1}>
+          {media.credit ?? TYPE_LABELS[media.type]}
         </Text>
-        <Text style={styles.meta} numberOfLines={1}>
-          {TYPE_LABELS[media.type]}
-          {media.credit ? ` · ${media.credit}` : ""}
+        <Text style={styles.date}>
+          {DATE_FORMAT.format(media.created_at)} · {TYPE_LABELS[media.type]}
         </Text>
-        <FavoriteButton media={media} />
       </View>
     </View>
   );
@@ -48,11 +53,11 @@ export function MediaCard({ media, variant }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
-    borderRadius: 8,
+    backgroundColor: COLORS.surface,
+    borderRadius: RADIUS.md,
     overflow: "hidden",
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "#ddd",
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
   cardList: {
     flexDirection: "row",
@@ -60,32 +65,49 @@ const styles = StyleSheet.create({
   },
   thumbnailGrid: {
     width: "100%",
-    aspectRatio: 4 / 3,
+    aspectRatio: 310 / 190,
   },
   thumbnailList: {
-    width: 88,
-    height: 88,
+    width: 96,
+    height: 96,
   },
   placeholder: {
-    backgroundColor: "#0b3d91",
+    backgroundColor: COLORS.placeholder,
     alignItems: "center",
     justifyContent: "center",
   },
   placeholderText: {
-    color: "#fff",
+    color: COLORS.text,
     fontWeight: "600",
   },
   body: {
     flex: 1,
-    padding: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
     gap: 4,
   },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 8,
+  },
   title: {
+    flex: 1,
+    color: COLORS.text,
     fontSize: 15,
+    lineHeight: 20,
     fontWeight: "600",
   },
-  meta: {
+  titleGrid: {
+    minHeight: 40, // toujours 2 lignes réservées : cartes de même hauteur dans la grille
+  },
+  credit: {
+    color: COLORS.muted,
     fontSize: 13,
-    color: "#666",
+  },
+  date: {
+    color: COLORS.muted,
+    fontSize: 12,
+    opacity: 0.8,
   },
 });
