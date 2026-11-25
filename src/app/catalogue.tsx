@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 import Head from "expo-router/head";
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 
+import { FavoritesBadge } from "@/components/FavoritesBadge";
 import { MediaCard } from "@/components/MediaCard";
 import { MediaFilters } from "@/components/MediaFilters";
 import { Pagination } from "@/components/Pagination";
@@ -16,7 +17,7 @@ export default function Catalogue() {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: "Catalogue" }} />
+      <Stack.Screen options={{ title: "Catalogue", headerRight: () => <FavoritesBadge /> }} />
       <Head>
         <title>Catalogue · Cosmos Gallery</title>
       </Head>
