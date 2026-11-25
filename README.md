@@ -1,83 +1,55 @@
-# Projet catalogue de médias de la nasa
+# Cosmos Gallery
 
-SPA catalogue de médias (photographies, vidéos, sons).
+Catalogue de médias (photos, vidéos, sons) qui réunit la **NASA Image and Video Library** et les publications des photographes de l'application.
 
-L'application permet aux utilisateurs de rechercher des médias pour consulter et commenter le contenu.
+Les visiteurs consultent le catalogue librement. Une fois connectés, ils peuvent mettre des médias en favoris et les commenter. Les photographes publient leurs propres médias, et les administrateurs gèrent l'application.
 
-La recherche peut s'effectuer via les filtres :
-- Mot clé (basé sur le titre du media)
-- Type de média
-- Photographe
-- periode de publication (début et fin)
+## Membres et parties
 
-Elle comporte 3 types d'utilisateurs :
-- les utilisateurs peuvent consulter et commenter des médias.
-- les photographes peuvent, en plus des actions des utilisateurs, publier des médias.
-- les administrateurs gèrent l'ensemble des entrées (médias, utilisateurs, commentaires).
+| Partie | Propriétaire | Contenu |
+|---|---|---|
+| A | Adrien Leclere | Modèles, service API NASA, catalogue (filtres, pagination, grille/liste), **CRUD Médias** |
+| B | Mathis Dauguet | CI (lint, déploiement), configuration Firebase, **CRUD Commentaires** |
+| C | Allan Decaux | État global des favoris, écran favoris, **CRUD Utilisateurs** |
 
-## Membres
-- Adrien Leclere (Partie A)
-- Mathis Dauguet (Partie B)
-- Allan Decaux (Partie C)
+Chaque membre commite sur sa propre partie, dans une branche par fonctionnalité.
 
-## Api utilisée
+## Fonctionnalités
 
-NASA Image and Video Library
-- Endpoints : https://api.nasa.gov/
-- documentation : https://images.nasa.gov/docs/images.nasa.gov_api_docs.pdf
+- Recherche dans le catalogue NASA par mot-clé et par type de média (image, vidéo, audio), avec pagination
+- Affichage en grille sur ordinateur et en liste sur téléphone
+- Favoris partagés dans toute l'application (état global)
+- Rôles `user`, `photographer` et `admin` : voir [_docs/roles-et-permissions.md](_docs/roles-et-permissions.md)
 
+## Documentation
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Toute la documentation est dans [`_docs/`](_docs/README.md) : architecture, rôles et règles de gestion de chaque CRUD.
 
-## Get started
+## API utilisée
 
-1. Install dependencies
+NASA Image and Video Library : `https://images-api.nasa.gov` (publique, sans clé)
+- Documentation : https://images.nasa.gov/docs/images.nasa.gov_api_docs.pdf
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Démarrer
 
 ```bash
-npm run reset-project
+npm install
+cp .env.example .env.local   # puis remplir les variables Firebase
+npm start                    # ou : npm run web
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+| Variable | Rôle |
+|---|---|
+| `EXPO_PUBLIC_FIREBASE_*` | Configuration du projet Firebase (console Firebase → Paramètres du projet → app Web) |
+| `NASA_KEY` | Inutilisée pour l'instant : seulement nécessaire pour les API de `api.nasa.gov` (APOD, NeoWs…) |
 
-### Other setup steps
+## Vérifications avant de pousser
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```bash
+npx tsc --noEmit   # typage
+npm run lint       # lint (aussi lancé par la CI)
+```
 
-## Learn more
+## Stack
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Expo SDK 58, React Native, Expo Router, TypeScript, Firebase (Auth, Firestore), serveur Express (fichiers des médias publiés).
