@@ -12,3 +12,4 @@ android
 .env*.local
 Dockerfile
 .dockerignore
+uploads
