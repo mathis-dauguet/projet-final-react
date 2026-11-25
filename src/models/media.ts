@@ -17,3 +17,17 @@ export interface Media {
   created_at: Date;
   updated_at: Date;
 }
+
+// Une section de SectionList : un titre + les médias du groupe
+export interface MediaSection {
+  title: MediaType;
+  data: Media[];
+}
+
+// Fonction pure : regroupe les médias par type (image, vidéo, audio), sans les groupes vides
+export function groupMediasByType(medias: Media[]): MediaSection[] {
+  return MEDIA_TYPES.map((type) => ({
+    title: type,
+    data: medias.filter((media) => media.type === type),
+  })).filter((section) => section.data.length > 0);
+}
