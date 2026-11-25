@@ -40,7 +40,7 @@ export function MediaCard({ media, variant }: Props) {
           {TYPE_LABELS[media.type]}
           {media.credit ? ` · ${media.credit}` : ""}
         </Text>
-        <FavoriteButton mediaId={`${media.source}:${media.id}`} />
+        <FavoriteButton media={media} />
       </View>
     </View>
   );
