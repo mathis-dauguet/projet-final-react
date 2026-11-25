@@ -28,10 +28,10 @@ const PAGE_SIZE = 24;
 
 const mediasCollection = collection(db, "medias");
 
-// Champs fournis à la création ; source, credit et les dates sont remplis ici (RG-MED-17)
+// Champs fournis à la création ; source, credit et les dates sont remplis ici
 export type NewMedia = Pick<Media, "name" | "type" | "size" | "path" | "thumbnail" | "author_id">;
 
-// Champs modifiables (RG-MED-31) ; id, source, author_id et created_at ne le sont jamais (RG-MED-33)
+// Champs modifiables ; id, source, author_id et created_at ne le sont jamais
 export type MediaChanges = Partial<Pick<Media, "name" | "type" | "size" | "path" | "thumbnail">>;
 
 export interface MediaPage {
@@ -68,7 +68,7 @@ function toMedia(id: string, data: DocumentData): Media {
   };
 }
 
-// RG-MED-14 : titre nettoyé des espaces, entre 3 et 100 caractères
+// Titre nettoyé des espaces, entre 3 et 100 caractères
 export function normalizeMediaName(name: string): string {
   const trimmed = name.trim();
   if (trimmed.length < MEDIA_NAME_MIN || trimmed.length > MEDIA_NAME_MAX) {
@@ -77,7 +77,7 @@ export function normalizeMediaName(name: string): string {
   return trimmed;
 }
 
-// L'id est réservé avant l'envoi du fichier : il sert au chemin uploads/medias/{author_id}/{id}/ (RG-MED-15)
+// L'id est réservé avant l'envoi du fichier : il sert au chemin uploads/medias/{author_id}/{id}/
 export function newMediaId(): string {
   return doc(mediasCollection).id;
 }
@@ -98,7 +98,7 @@ export async function getMedia(id: string): Promise<Media | null> {
   return snapshot.exists() ? toMedia(snapshot.id, snapshot.data()) : null;
 }
 
-// Du plus récent au plus ancien, par pages. Sans includeDeleted, les médias supprimés sont exclus (RG-MED-22).
+// Du plus récent au plus ancien, par pages. Sans includeDeleted, les médias supprimés sont exclus.
 export async function listMedias({ authorId, includeDeleted = false, cursor = null }: ListOptions = {}): Promise<MediaPage> {
   const constraints: QueryConstraint[] = [];
   if (authorId) constraints.push(where("author_id", "==", authorId));
@@ -124,7 +124,7 @@ export async function updateMedia(id: string, changes: MediaChanges): Promise<vo
   });
 }
 
-// RG-MED-42 : suppression logique, le document et le fichier sont conservés
+// Suppression logique : le document et le fichier sont conservés
 export async function deleteMedia(id: string): Promise<void> {
   await updateDoc(doc(mediasCollection, id), {
     deleted_at: serverTimestamp(),
@@ -132,7 +132,7 @@ export async function deleteMedia(id: string): Promise<void> {
   });
 }
 
-// RG-MED-45 : réservé à l'admin (vérifié par l'écran et par les règles Firestore)
+// Réservé à l'admin (vérifié par l'écran et par les règles Firestore)
 export async function restoreMedia(id: string): Promise<void> {
   await updateDoc(doc(mediasCollection, id), {
     deleted_at: null,
