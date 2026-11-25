@@ -43,3 +43,6 @@ example
 /android
 
 /cours
+
+/uploads/medias/*
+!/uploads/medias/.gitkeep
