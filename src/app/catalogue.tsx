@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { Link, Stack } from "expo-router";
 import Head from "expo-router/head";
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 
@@ -17,7 +17,19 @@ export default function Catalogue() {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: "Catalogue", headerRight: () => <FavoritesBadge /> }} />
+      <Stack.Screen
+        options={{
+          title: "Catalogue",
+          headerRight: () => (
+            <View style={styles.headerRight}>
+              <FavoritesBadge />
+              <Link href="/account" style={styles.accountLink}>
+                Compte
+              </Link>
+            </View>
+          ),
+        }}
+      />
       <Head>
         <title>Catalogue · Cosmos Gallery</title>
       </Head>
@@ -49,6 +61,15 @@ export default function Catalogue() {
 }
 
 const styles = StyleSheet.create({
+  headerRight: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  accountLink: {
+    color: "#0B7A70",
+    fontWeight: "bold",
+    marginRight: 12,
+  },
   container: {
     flex: 1,
     backgroundColor: "#f4f5f7",
