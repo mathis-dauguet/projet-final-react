@@ -1,12 +1,15 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Link } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { COLORS } from "@/constants/theme";
 
 export function Logo() {
   return (
-    <View style={styles.row}>
-      <View style={styles.dot} />
-      <Text style={styles.name}>Cosmos Gallery</Text>
-    </View>
+    <Link href="/" asChild>
+      <Pressable accessibilityLabel="Retour au catalogue" style={styles.row}>
+        <View style={styles.dot} />
+        <Text style={styles.name}>Cosmos Gallery</Text>
+      </Pressable>
+    </Link>
   );
 }
 

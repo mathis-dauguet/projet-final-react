@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 import Head from "expo-router/head";
 import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { HeaderActions } from "@/components/HeaderActions";
 import { Logo } from "@/components/Logo";
 import { COLORS } from "@/constants/theme";
 import { AuthProvider } from "@/context/AuthContext";
@@ -41,13 +42,25 @@ function RootStack() {
         headerTintColor: COLORS.text,
         headerTitleStyle: { fontWeight: "700" },
         headerShadowVisible: false,
+        headerBackVisible: false,
+        headerLeft: () => null,
         contentStyle: { backgroundColor: COLORS.background },
       }}
     >
       <Stack.Screen name="index" options={{ title: "Catalogue", headerTitle: () => <Logo /> }} />
       <Stack.Protected guard={user !== null}>
-        <Stack.Screen name="favoris" options={{ title: "Mes favoris" }} />
-        <Stack.Screen name="account" options={{ title: "Compte" }} />
+        <Stack.Screen
+          name="(user)"
+          options={{
+            title: "Espace utilisateur",
+            headerTitle: () => <Logo />,
+            headerRight: () => (
+              <View style={styles.headerRight}>
+                <HeaderActions />
+              </View>
+            ),
+          }}
+        />
       </Stack.Protected>
       <Stack.Protected guard={user === null}>
         <Stack.Screen name="(auth)/sign-in" options={{ title: "Connexion", headerTitle: () => <Logo /> }} />
@@ -58,5 +71,6 @@ function RootStack() {
 }
 
 const styles = StyleSheet.create({
+  headerRight: { marginRight: 12 },
   loading: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: COLORS.background },
 });

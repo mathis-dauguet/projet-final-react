@@ -1,3 +1,4 @@
+import Head from "expo-router/head";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "@/components/ui/Button";
 import { COLORS, RADIUS } from "@/constants/theme";
@@ -8,6 +9,9 @@ export default function AccountScreen() {
   const { user } = useAuth();
   return (
     <View style={styles.screen}>
+      <Head>
+        <title>Mon compte · Cosmos Gallery</title>
+      </Head>
       <View style={styles.card}>
         <Text style={styles.title}>Mon compte</Text>
         <View style={styles.info}>
@@ -21,11 +25,10 @@ export default function AccountScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.background, padding: 16, paddingTop: 48 },
+  screen: { flex: 1, backgroundColor: COLORS.background, padding: 16, paddingTop: 32 },
   card: {
     width: "100%",
-    maxWidth: 420,
-    alignSelf: "center",
+    maxWidth: 520,
     padding: 24,
     gap: 20,
     backgroundColor: COLORS.surface,
