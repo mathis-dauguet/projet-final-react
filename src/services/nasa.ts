@@ -45,6 +45,7 @@ export interface SearchParams {
 export interface SearchResult {
   medias: Media[];
   total_pages: number;
+  total_hits: number;
 }
 
 function toMedia(item: NasaItem): Media {
@@ -87,6 +88,7 @@ export async function searchMedias(
 
   return {
     medias: json.collection.items.map(toMedia),
+    total_hits: totalHits,
     total_pages: Math.min(Math.ceil(totalHits / page_size), Math.floor(MAX_RESULTS / page_size)),
   };
 }

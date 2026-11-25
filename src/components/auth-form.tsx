@@ -1,12 +1,8 @@
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { Button } from "@/components/ui/Button";
+import { TextField } from "@/components/ui/TextField";
+import { COLORS } from "@/constants/theme";
 import { authErrorMessage } from "@/services/auth-service";
 
 type AuthFormProps = {
@@ -34,50 +30,31 @@ export function AuthForm({ submitLabel, onSubmit }: AuthFormProps) {
 
   return (
     <View style={styles.form}>
-      <TextInput
+      <TextField
+        label="E-mail"
         value={email}
         onChangeText={setEmail}
-        placeholder="E-mail"
+        placeholder="nom@exemple.com"
         keyboardType="email-address"
         autoCapitalize="none"
         autoComplete="email"
-        style={styles.input}
       />
-      <TextInput
+      <TextField
+        label="Mot de passe"
         value={password}
         onChangeText={setPassword}
-        placeholder="Mot de passe"
+        placeholder="••••••••"
         secureTextEntry
-        style={styles.input}
+        onSubmitEditing={submit}
       />
       {error !== "" && <Text style={styles.error}>{error}</Text>}
-      <Pressable onPress={submit} disabled={sending} style={styles.button}>
-        {sending ? (
-          <ActivityIndicator color="#FFFFFF" />
-        ) : (
-          <Text style={styles.buttonLabel}>{submitLabel}</Text>
-        )}
-      </Pressable>
+      <Button label={submitLabel} onPress={submit} loading={sending} style={styles.button} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  form: { gap: 12 },
-  input: {
-    borderWidth: 1,
-    borderColor: "#D9DCEA",
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: "#FFFFFF",
-  },
-  error: { color: "#C2410C" },
-  button: {
-    backgroundColor: "#0B7A70",
-    borderRadius: 8,
-    padding: 14,
-    alignItems: "center",
-  },
-  buttonLabel: { color: "#FFFFFF", fontWeight: "700", fontSize: 16 },
+  form: { gap: 16 },
+  error: { color: COLORS.danger },
+  button: { paddingVertical: 12, marginTop: 4 },
 });

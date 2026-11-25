@@ -1,6 +1,9 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { TYPE_LABELS } from "@/components/MediaCard";
+import { Button } from "@/components/ui/Button";
+import { TextField } from "@/components/ui/TextField";
+import { COLORS, RADIUS } from "@/constants/theme";
 import type { TypeFilter } from "@/hooks/useMediaFilters";
 import { MEDIA_TYPES } from "@/models/media";
 
@@ -14,49 +17,68 @@ interface Props {
 }
 
 export function MediaFilters({ search, onSearchChange, type, onTypeChange }: Props) {
+  const reset = () => {
+    onSearchChange("");
+    onTypeChange("all");
+  };
+
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
+      <TextField
+        label="Recherche"
+        containerStyle={styles.search}
         value={search}
         onChangeText={onSearchChange}
-        placeholder="Rechercher un média…"
+        placeholder="Mot-clé (lune, mars, galaxie…)"
         autoCorrect={false}
         clearButtonMode="while-editing"
       />
-      <View style={styles.chips}>
-        {TYPE_FILTERS.map((value) => {
-          const active = value === type;
-          return (
-            <Pressable
-              key={value}
-              onPress={() => onTypeChange(value)}
-              style={[styles.chip, active && styles.chipActive]}
-            >
-              <Text style={[styles.chipText, active && styles.chipTextActive]}>
-                {value === "all" ? "Tous" : TYPE_LABELS[value]}
-              </Text>
-            </Pressable>
-          );
-        })}
+      <View style={styles.typeGroup}>
+        <Text style={styles.label}>Type de média</Text>
+        <View style={styles.chips}>
+          {TYPE_FILTERS.map((value) => {
+            const active = value === type;
+            return (
+              <Pressable
+                key={value}
+                onPress={() => onTypeChange(value)}
+                style={[styles.chip, active && styles.chipActive]}
+              >
+                <Text style={[styles.chipText, active && styles.chipTextActive]}>
+                  {value === "all" ? "Tous" : TYPE_LABELS[value]}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
       </View>
+      <Button label="Réinitialiser" variant="secondary" onPress={reset} style={styles.reset} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    gap: 10,
-    padding: 12,
-  },
-  input: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "flex-end",
+    gap: 16,
+    padding: 20,
+    backgroundColor: COLORS.surface,
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    fontSize: 15,
-    backgroundColor: "#fff",
+    borderColor: COLORS.border,
+    borderRadius: RADIUS.lg,
+  },
+  search: {
+    flexGrow: 1,
+    flexBasis: 240,
+  },
+  typeGroup: {
+    gap: 6,
+  },
+  label: {
+    color: COLORS.muted,
+    fontSize: 12,
   },
   chips: {
     flexDirection: "row",
@@ -65,18 +87,25 @@ const styles = StyleSheet.create({
   },
   chip: {
     paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 16,
+    paddingVertical: 9,
+    borderRadius: RADIUS.sm,
     borderWidth: 1,
-    borderColor: "#0b3d91",
+    borderColor: COLORS.border,
+    backgroundColor: COLORS.surfaceAlt,
   },
   chipActive: {
-    backgroundColor: "#0b3d91",
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
   },
   chipText: {
-    color: "#0b3d91",
+    color: COLORS.muted,
+    fontSize: 14,
   },
   chipTextActive: {
-    color: "#fff",
+    color: COLORS.text,
+    fontWeight: "600",
+  },
+  reset: {
+    paddingVertical: 9,
   },
 });

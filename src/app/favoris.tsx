@@ -2,11 +2,10 @@ import { Stack } from "expo-router";
 import { SectionList, StyleSheet, Text, View } from "react-native";
 
 import { MediaCard, TYPE_LABELS } from "@/components/MediaCard";
-import { COLORS } from "@/constants/theme";
+import { COLORS, CONTENT_MAX_WIDTH } from "@/constants/theme";
 import { useFavorites } from "@/hooks/useFavorites";
 import { groupMediasByType } from "@/models/media";
 
-// Écran des favoris : les médias de l'état global, groupés par type dans une SectionList
 export default function Favoris() {
   const { favorites } = useFavorites();
   const sections = groupMediasByType(favorites);
@@ -16,8 +15,6 @@ export default function Favoris() {
       <Stack.Screen
         options={{
           title: "Mes favoris",
-          headerStyle: { backgroundColor: COLORS.surface },
-          headerTintColor: COLORS.text,
         }}
       />
       <SectionList
@@ -49,7 +46,11 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
   },
   list: {
+    width: "100%",
+    maxWidth: CONTENT_MAX_WIDTH,
+    alignSelf: "center",
     padding: 16,
+    paddingTop: 32,
     gap: 12,
   },
   hero: {
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
   title: {
     color: COLORS.text,
     fontSize: 32,
-    fontWeight: "bold",
+    fontWeight: "800",
   },
   subtitle: {
     color: COLORS.muted,
