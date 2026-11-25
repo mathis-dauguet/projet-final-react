@@ -2,9 +2,9 @@
 
 Quatre profils existent : le **visiteur** (non connecté) et les trois rôles du modèle `User` (`user`, `photographer`, `admin`).
 
-- **user** : consulte, met en favoris et commente.
+- **user** : consulte et met en favoris.
 - **photographer** : fait tout ce que fait un `user`, et publie ses propres médias.
-- **admin** : gère l'application (médias, commentaires, utilisateurs). Il ne publie pas, ne commente pas et ne met pas en favoris.
+- **admin** : gère les médias et les utilisateurs. Il ne publie pas et ne met pas en favoris.
 
 ## Tableau des permissions
 
@@ -13,11 +13,9 @@ Quatre profils existent : le **visiteur** (non connecté) et les trois rôles du
 | Consulter le catalogue (NASA + communauté) | ✅ | ✅ | ✅ | ✅ |
 | Voir le profil d'un photographe | ✅ | ✅ | ✅ | ✅ |
 | Mettre un média en favori | ❌ | ✅ | ✅ | ❌ |
-| Commenter et noter un média | ❌ | ✅ | ✅ | ❌ |
 | Publier un média | ❌ | ❌ | ✅ | ❌ |
 | Modifier / supprimer **ses** médias | ❌ | ❌ | ✅ | — |
 | Modifier / supprimer **n'importe quel** média de la communauté | ❌ | ❌ | ❌ | ✅ |
-| Gérer les commentaires (modération) | ❌ | ❌ | ❌ | ✅ |
 | Gérer les utilisateurs (rôles, suppression) | ❌ | ❌ | ❌ | ✅ |
 
 Les médias de la NASA sont en **lecture seule pour tout le monde**, admin compris : ils ne sont pas stockés dans notre base.

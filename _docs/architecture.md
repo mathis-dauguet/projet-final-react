@@ -11,7 +11,7 @@ Tout le code est dans `src/`. Seul `src/app/` contient des écrans : chaque fich
 | `hooks/` | Logique réutilisable (état, appels, responsive) | `useMedias`, `useMediaFilters`, `useColumns` |
 | `context/` | État global partagé par toute l'app | `FavoritesContext` |
 | `services/` | Accès aux données externes (API, Firebase) | `nasa.ts` |
-| `models/` | Types TypeScript des données | `Media`, `User`, `Comment` |
+| `models/` | Types TypeScript des données | `Media`, `User` |
 | `data/` | Données fictives (service factice du TP2) | `medias.ts` |
 | `constants/` | Valeurs partagées | `theme.ts` (couleurs) |
 
@@ -27,7 +27,7 @@ Tout le code est dans `src/`. Seul `src/app/` contient des écrans : chaque fich
 | `author_id` | `null` | id de l'utilisateur qui a publié |
 | `credit` | photographe ou centre NASA | `null` |
 
-Notre base ne stocke que ce que produisent nos utilisateurs : comptes, médias publiés, commentaires. Un commentaire sur un média NASA stocke seulement son `media_id` (le `nasa_id`) et `media_source: "nasa"`.
+Notre base ne stocke que ce que produisent nos utilisateurs : comptes et médias publiés.
 
 ## Flux de l'écran catalogue
 

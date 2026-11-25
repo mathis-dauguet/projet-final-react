@@ -2,15 +2,15 @@
 
 Catalogue de médias (photos, vidéos, sons) qui réunit la **NASA Image and Video Library** et les publications des photographes de l'application.
 
-Les visiteurs consultent le catalogue librement. Une fois connectés, ils peuvent mettre des médias en favoris et les commenter. Les photographes publient leurs propres médias, et les administrateurs gèrent l'application.
+Les visiteurs consultent le catalogue librement. Une fois connectés, ils peuvent mettre des médias en favoris. Les photographes publient leurs propres médias, et les administrateurs gèrent l'application.
 
 ## Membres et parties
 
 | Partie | Propriétaire | Contenu |
 |---|---|---|
 | A | Adrien Leclere | Modèles, service API NASA, catalogue (filtres, pagination, grille/liste), **CRUD Médias** |
-| B | Mathis Dauguet | CI (lint, déploiement), configuration Firebase, **CRUD Commentaires** |
-| C | Allan Decaux | État global des favoris, écran favoris, **CRUD Utilisateurs** |
+| B | Mathis Dauguet | CI (lint, déploiement), configuration Firebase, **Favoris** |
+| C | Allan Decaux | Authentification, **CRUD Utilisateurs** |
 
 Chaque membre commite sur sa propre partie, dans une branche par fonctionnalité.
 

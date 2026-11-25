@@ -52,15 +52,14 @@ Ces règles concernent les médias **publiés par les photographes** (`source: "
 | RG-MED-41 | Une **fenêtre modale de confirmation** s'affiche avant toute suppression. |
 | RG-MED-42 | La suppression est **logique** : `deleted_at` reçoit la date de suppression. Le document Firestore et le fichier sur le serveur sont conservés. |
 | RG-MED-43 | Si le compte de l'auteur est supprimé, ses médias sont masqués avec lui, et réapparaissent si le compte est restauré. **(à confirmer avec Allan)** |
-| RG-MED-44 | Les commentaires d'un média supprimé sont masqués avec lui, sans être modifiés, et réapparaissent si le média est restauré. **(à confirmer avec Mathis)** |
 | RG-MED-45 | Seul un admin peut restaurer un média supprimé (remettre `deleted_at` à `null`). |
 
-## Favoris et commentaires sur un média
+## Favoris sur un média
 
 | Règle | Description |
 |---|---|
-| RG-MED-50 | Les rôles `user` et `photographer` peuvent mettre en favori et commenter **n'importe quel média**, NASA ou communauté, y compris les leurs. |
-| RG-MED-51 | Un commentaire ou un favori référence un média par `media_source` + `media_id` (RG-MED-01). |
+| RG-MED-50 | Les rôles `user` et `photographer` peuvent mettre en favori **n'importe quel média**, NASA ou communauté, y compris les leurs. |
+| RG-MED-51 | Un favori référence un média par `source` + `id` (RG-MED-01). |
 
 ## Impacts techniques
 
