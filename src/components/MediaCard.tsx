@@ -1,6 +1,7 @@
 import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";
 
+import { FavoriteButton } from "@/components/FavoriteButton";
 import type { Media, MediaType } from "@/models/media";
 
 export const TYPE_LABELS: Record<MediaType, string> = {
@@ -39,6 +40,7 @@ export function MediaCard({ media, variant }: Props) {
           {TYPE_LABELS[media.type]}
           {media.credit ? ` · ${media.credit}` : ""}
         </Text>
+        <FavoriteButton mediaId={`${media.source}:${media.id}`} />
       </View>
     </View>
   );
