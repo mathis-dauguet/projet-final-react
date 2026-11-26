@@ -7,20 +7,21 @@ import { useFavorites } from "@/hooks/useFavorites";
 type Item = { href: Href; path: string; icon: string; label: string; count?: number };
 
 export function UserSidebar({ compact }: { compact: boolean }) {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const { favorites } = useFavorites();
   const pathname = usePathname();
 
   const items: Item[] = [
     { href: "/account", path: "/account", icon: "◉", label: "Mon compte" },
     { href: "/favoris", path: "/favoris", icon: "★", label: "Mes favoris", count: favorites.length },
+    ...(isAdmin ? [{ href: "/admin/users", path: "/admin/users", icon: "⚙", label: "Utilisateurs" } as Item] : []),
   ];
 
   return (
     <View style={[styles.sidebar, compact && styles.sidebarCompact]}>
       {!compact && (
         <View style={styles.profile}>
-          <Text style={styles.section}>Espace utilisateur</Text>
+          <Text style={styles.section}>{isAdmin ? "Administrateur" : "Espace utilisateur"}</Text>
           <Text style={styles.email} numberOfLines={1}>
             {user?.email}
           </Text>

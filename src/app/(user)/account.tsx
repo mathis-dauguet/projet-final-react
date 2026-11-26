@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Button } from "@/components/ui/Button";
 import { COLORS, RADIUS } from "@/constants/theme";
 import { useAuth } from "@/hooks/useAuth";
+import { ROLE_LABELS } from "@/models/user";
 import { signOut } from "@/services/auth-service";
 
 export default function AccountScreen() {
@@ -18,6 +19,12 @@ export default function AccountScreen() {
           <Text style={styles.label}>Connecté en tant que</Text>
           <Text style={styles.email}>{user?.email}</Text>
         </View>
+        {user && (
+          <View style={styles.info}>
+            <Text style={styles.label}>Rôle</Text>
+            <Text style={styles.email}>{ROLE_LABELS[user.role]}</Text>
+          </View>
+        )}
         <Button label="Se déconnecter" variant="danger" onPress={signOut} style={styles.button} />
       </View>
     </View>
