@@ -17,6 +17,9 @@ export function UserSidebar({ compact }: { compact: boolean }) {
     { href: "/account", path: "/account", icon: "◉", label: "Mon compte" },
     { href: "/favoris", path: "/favoris", icon: "★", label: "Mes favoris", count: favorites.length },
   ];
+  if (role === "admin") {
+    items.push({ href: "/admin/medias", path: "/admin/medias", icon: "⚙", label: "Gérer les médias" });
+  }
   if (role === "photographer") {
     items.push(
       { href: "/medias", path: "/medias", icon: "▦", label: "Mes médias" },
