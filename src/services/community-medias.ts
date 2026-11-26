@@ -18,7 +18,7 @@ import {
 } from "firebase/firestore";
 
 import { MEDIA_NAME_MAX, MEDIA_NAME_MIN } from "@/constants/media-rules";
-import type { Media } from "@/models/media";
+import type { Media, MediaType } from "@/models/media";
 import { db } from "@/services/firebase";
 
 // Médias publiés par les photographes (source "user"), stockés dans la collection "medias".
@@ -42,6 +42,7 @@ export interface MediaPage {
 
 export interface ListOptions {
   authorId?: string;
+  type?: MediaType;
   includeDeleted?: boolean;
   cursor?: QueryDocumentSnapshot | null;
 }
@@ -99,9 +100,10 @@ export async function getMedia(id: string): Promise<Media | null> {
 }
 
 // Du plus récent au plus ancien, par pages. Sans includeDeleted, les médias supprimés sont exclus.
-export async function listMedias({ authorId, includeDeleted = false, cursor = null }: ListOptions = {}): Promise<MediaPage> {
+export async function listMedias({ authorId, type, includeDeleted = false, cursor = null }: ListOptions = {}): Promise<MediaPage> {
   const constraints: QueryConstraint[] = [];
   if (authorId) constraints.push(where("author_id", "==", authorId));
+  if (type) constraints.push(where("type", "==", type));
   if (!includeDeleted) constraints.push(where("deleted_at", "==", null));
   constraints.push(orderBy("created_at", "desc"));
   if (cursor) constraints.push(startAfter(cursor));
