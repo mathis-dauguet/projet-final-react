@@ -4,22 +4,31 @@ import { TYPE_LABELS } from "@/components/MediaCard";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { COLORS, RADIUS } from "@/constants/theme";
-import type { TypeFilter } from "@/hooks/useMediaFilters";
+import type { SourceFilter, TypeFilter } from "@/hooks/useMediaFilters";
 import { MEDIA_TYPES } from "@/models/media";
 
 const TYPE_FILTERS: TypeFilter[] = ["all", ...MEDIA_TYPES];
+
+const SOURCE_FILTERS: { value: SourceFilter; label: string }[] = [
+  { value: "all", label: "Tous" },
+  { value: "nasa", label: "NASA" },
+  { value: "user", label: "Communauté" },
+];
 
 interface Props {
   search: string;
   onSearchChange: (value: string) => void;
   type: TypeFilter;
   onTypeChange: (value: TypeFilter) => void;
+  source: SourceFilter;
+  onSourceChange: (value: SourceFilter) => void;
 }
 
-export function MediaFilters({ search, onSearchChange, type, onTypeChange }: Props) {
+export function MediaFilters({ search, onSearchChange, type, onTypeChange, source, onSourceChange }: Props) {
   const reset = () => {
     onSearchChange("");
     onTypeChange("all");
+    onSourceChange("all");
   };
 
   return (
@@ -47,6 +56,23 @@ export function MediaFilters({ search, onSearchChange, type, onTypeChange }: Pro
                 <Text style={[styles.chipText, active && styles.chipTextActive]}>
                   {value === "all" ? "Tous" : TYPE_LABELS[value]}
                 </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </View>
+      <View style={styles.typeGroup}>
+        <Text style={styles.label}>Source</Text>
+        <View style={styles.chips}>
+          {SOURCE_FILTERS.map(({ value, label }) => {
+            const active = value === source;
+            return (
+              <Pressable
+                key={value}
+                onPress={() => onSourceChange(value)}
+                style={[styles.chip, active && styles.chipActive]}
+              >
+                <Text style={[styles.chipText, active && styles.chipTextActive]}>{label}</Text>
               </Pressable>
             );
           })}
