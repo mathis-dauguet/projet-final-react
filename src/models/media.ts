@@ -16,6 +16,7 @@ export interface Media {
   credit: string | null;
   created_at: Date;
   updated_at: Date;
+  deleted_at: Date | null;
 }
 
 // Une section de SectionList : un titre + les médias du groupe

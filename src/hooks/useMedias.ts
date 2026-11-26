@@ -15,11 +15,13 @@ function sortByDateDesc(medias: Media[]): Media[] {
   return [...medias].sort((a, b) => b.created_at.getTime() - a.created_at.getTime());
 }
 
-export function useMedias(params: SearchParams) {
-  const key = JSON.stringify(params);
+// Avec params à null, rien n'est chargé (par exemple quand le catalogue n'affiche que la communauté)
+export function useMedias(params: SearchParams | null) {
+  const key = params ? JSON.stringify(params) : null;
   const [result, setResult] = useState<Result | null>(null);
 
   useEffect(() => {
+    if (!key || !params) return;
     const controller = new AbortController();
 
     searchMedias(params, controller.signal)
@@ -38,7 +40,7 @@ export function useMedias(params: SearchParams) {
     medias: result?.medias ?? [],
     totalPages: result?.total_pages ?? 0,
     totalHits: result?.total_hits ?? 0,
-    loading: result?.key !== key,
+    loading: key !== null && result?.key !== key,
     error: result?.error ?? null,
   };
 }

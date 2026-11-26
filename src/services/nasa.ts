@@ -66,6 +66,7 @@ function toMedia(item: NasaItem): Media {
     credit: data.photographer ?? data.secondary_creator ?? data.center ?? "NASA",
     created_at: createdAt,
     updated_at: createdAt,
+    deleted_at: null,
   };
 }
 

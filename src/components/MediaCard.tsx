@@ -1,4 +1,5 @@
 import { Image } from "expo-image";
+import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
 import { FavoriteButton } from "@/components/FavoriteButton";
@@ -40,9 +41,19 @@ export function MediaCard({ media, variant }: Props) {
           </Text>
           {user && <FavoriteButton media={media} />}
         </View>
-        <Text style={styles.credit} numberOfLines={1}>
-          {media.credit ?? TYPE_LABELS[media.type]}
-        </Text>
+        {media.source === "user" && media.author_id ? (
+          <Link
+            href={{ pathname: "/photographers/[id]", params: { id: media.author_id } }}
+            style={[styles.credit, styles.authorLink]}
+            numberOfLines={1}
+          >
+            Photographe de la communauté
+          </Link>
+        ) : (
+          <Text style={styles.credit} numberOfLines={1}>
+            {media.credit ?? TYPE_LABELS[media.type]}
+          </Text>
+        )}
         <Text style={styles.date}>
           {DATE_FORMAT.format(media.created_at)} · {TYPE_LABELS[media.type]}
         </Text>
@@ -104,6 +115,9 @@ const styles = StyleSheet.create({
   credit: {
     color: COLORS.muted,
     fontSize: 13,
+  },
+  authorLink: {
+    color: COLORS.primary,
   },
   date: {
     color: COLORS.muted,

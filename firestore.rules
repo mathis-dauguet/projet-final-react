@@ -1,0 +1,88 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function role() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isAdmin() {
+      return signedIn() && role() == 'admin';
+    }
+
+    function isPhotographer() {
+      return signedIn() && role() == 'photographer';
+    }
+
+    // ---------- Médias publiés par les photographes (partie A) ----------
+
+    function validMedia(data) {
+      return data.name is string
+        && data.name.size() >= 3
+        && data.name.size() <= 100
+        && data.type in ['image', 'video', 'audio']
+        && data.path is string
+        && (data.thumbnail == null || data.thumbnail is string)
+        && (data.size == null || data.size is int);
+    }
+
+    match /medias/{mediaId} {
+      // Tout le monde voit les médias publiés ; l'auteur et les admins voient aussi les supprimés
+      allow read: if resource.data.deleted_at == null
+        || isAdmin()
+        || (signedIn() && resource.data.author_id == request.auth.uid);
+
+      // Seul un photographe publie, en son nom, un média non supprimé daté par le serveur
+      allow create: if isPhotographer()
+        && request.resource.data.keys().hasOnly(['name', 'type', 'size', 'path', 'thumbnail', 'author_id', 'created_at', 'updated_at', 'deleted_at'])
+        && request.resource.data.author_id == request.auth.uid
+        && validMedia(request.resource.data)
+        && request.resource.data.created_at == request.time
+        && request.resource.data.updated_at == request.time
+        && request.resource.data.deleted_at == null;
+
+      // L'auteur ou un admin modifie ou supprime (logiquement) ; seul un admin modifie ou restaure un média supprimé.
+      // id, author_id et created_at ne changent jamais.
+      allow update: if ((signedIn() && resource.data.author_id == request.auth.uid && resource.data.deleted_at == null) || isAdmin())
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'type', 'size', 'path', 'thumbnail', 'updated_at', 'deleted_at'])
+        && validMedia(request.resource.data)
+        && request.resource.data.updated_at == request.time
+        && (request.resource.data.deleted_at == resource.data.deleted_at
+          || request.resource.data.deleted_at == request.time
+          || (request.resource.data.deleted_at == null && isAdmin()));
+
+      // La suppression est toujours logique
+      allow delete: if false;
+    }
+
+    // ---------- Utilisateurs (partie C, proposition à valider par Allan) ----------
+
+    match /users/{userId} {
+      allow read: if signedIn() && (request.auth.uid == userId || isAdmin());
+
+      // À l'inscription : on ne peut choisir que user ou photographer
+      allow create: if signedIn()
+        && request.auth.uid == userId
+        && request.resource.data.role in ['user', 'photographer'];
+
+      // L'utilisateur modifie son profil sans toucher à son rôle ; l'admin peut tout modifier
+      allow update: if (signedIn()
+          && request.auth.uid == userId
+          && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']))
+        || isAdmin();
+
+      allow delete: if false;
+
+      // ---------- Favoris (partie B, proposition à valider par Mathis) ----------
+
+      match /favorites/{favoriteId} {
+        allow read, write: if signedIn() && request.auth.uid == userId;
+      }
+    }
+  }
+}

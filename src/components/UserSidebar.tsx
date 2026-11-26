@@ -3,18 +3,29 @@ import { StyleSheet, Text, View } from "react-native";
 import { COLORS, RADIUS } from "@/constants/theme";
 import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavorites";
+import { useUserRole } from "@/hooks/useUserRole";
 
 type Item = { href: Href; path: string; icon: string; label: string; count?: number };
 
 export function UserSidebar({ compact }: { compact: boolean }) {
   const { user } = useAuth();
   const { favorites } = useFavorites();
+  const { role } = useUserRole();
   const pathname = usePathname();
 
   const items: Item[] = [
     { href: "/account", path: "/account", icon: "◉", label: "Mon compte" },
     { href: "/favoris", path: "/favoris", icon: "★", label: "Mes favoris", count: favorites.length },
   ];
+  if (role === "admin") {
+    items.push({ href: "/admin/medias", path: "/admin/medias", icon: "⚙", label: "Gérer les médias" });
+  }
+  if (role === "photographer") {
+    items.push(
+      { href: "/medias", path: "/medias", icon: "▦", label: "Mes médias" },
+      { href: "/medias/new", path: "/medias/new", icon: "＋", label: "Publier un média" },
+    );
+  }
 
   return (
     <View style={[styles.sidebar, compact && styles.sidebarCompact]}>

@@ -61,6 +61,7 @@ function toFavorite(id: string, data: DocumentData): Favorite {
       credit: media.credit ?? null,
       created_at: new Date(createdMs),
       updated_at: new Date(updatedMs),
+      deleted_at: null,
     },
   };
 }

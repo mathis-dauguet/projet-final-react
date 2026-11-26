@@ -15,6 +15,7 @@ export const MEDIAS: Media[] = [
     credit: null,
     created_at: new Date("1969-07-11"),
     updated_at: new Date("1969-07-11"),
+    deleted_at: null,
   },
   {
     id: "PIA07081",
@@ -28,6 +29,7 @@ export const MEDIAS: Media[] = [
     credit: null,
     created_at: new Date("2004-11-30"),
     updated_at: new Date("2004-11-30"),
+    deleted_at: null,
   },
   {
     id: "PIA07108",
@@ -41,6 +43,7 @@ export const MEDIAS: Media[] = [
     credit: null,
     created_at: new Date("2004-12-13"),
     updated_at: new Date("2004-12-13"),
+    deleted_at: null,
   },
   {
     id: "GSFC_20171208_Archive_e001464",
@@ -54,6 +57,7 @@ export const MEDIAS: Media[] = [
     credit: null,
     created_at: new Date("2017-12-08"),
     updated_at: new Date("2017-12-08"),
+    deleted_at: null,
   },
   {
     id: "PIA22766",
@@ -67,6 +71,7 @@ export const MEDIAS: Media[] = [
     credit: null,
     created_at: new Date("2018-10-02"),
     updated_at: new Date("2018-10-02"),
+    deleted_at: null,
   },
   {
     id: "art002e016299",
@@ -80,6 +85,7 @@ export const MEDIAS: Media[] = [
     credit: null,
     created_at: new Date("2026-04-06"),
     updated_at: new Date("2026-04-06"),
+    deleted_at: null,
   },
   {
     id: "A1Launch",
@@ -93,6 +99,7 @@ export const MEDIAS: Media[] = [
     credit: null,
     created_at: new Date("2022-12-08"),
     updated_at: new Date("2022-12-08"),
+    deleted_at: null,
   },
   {
     id: "Ep431_CHAPEA_2_Audio_Log_3",
@@ -106,5 +113,6 @@ export const MEDIAS: Media[] = [
     credit: null,
     created_at: new Date("2026-07-31"),
     updated_at: new Date("2026-07-31"),
+    deleted_at: null,
   },
 ];
