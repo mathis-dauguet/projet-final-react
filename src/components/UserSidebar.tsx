@@ -18,7 +18,10 @@ export function UserSidebar({ compact }: { compact: boolean }) {
     { href: "/favoris", path: "/favoris", icon: "★", label: "Mes favoris", count: favorites.length },
   ];
   if (role === "photographer") {
-    items.push({ href: "/medias/new", path: "/medias/new", icon: "＋", label: "Publier un média" });
+    items.push(
+      { href: "/medias", path: "/medias", icon: "▦", label: "Mes médias" },
+      { href: "/medias/new", path: "/medias/new", icon: "＋", label: "Publier un média" },
+    );
   }
 
   return (

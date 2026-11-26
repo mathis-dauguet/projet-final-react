@@ -1,4 +1,5 @@
 import { Image } from "expo-image";
+import { router } from "expo-router";
 import Head from "expo-router/head";
 import { useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -27,11 +28,9 @@ export default function NewMediaScreen() {
   const [file, setFile] = useState<PickedFile | null>(null);
   const [publishing, setPublishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
 
   const choose = async (picker: () => Promise<PickedFile | null>) => {
     setError(null);
-    setSuccess(null);
     try {
       const picked = await picker();
       if (picked) setFile(picked);
@@ -46,12 +45,9 @@ export default function NewMediaScreen() {
     setError(null);
     try {
       await publishMedia(name, file);
-      setSuccess(`« ${name.trim()} » est publié.`);
-      setName("");
-      setFile(null);
+      router.replace("/medias");
     } catch (err) {
       setError(errorMessage(err));
-    } finally {
       setPublishing(false);
     }
   };
@@ -114,7 +110,6 @@ export default function NewMediaScreen() {
         )}
 
         {error && <Text style={styles.error}>{error}</Text>}
-        {success && <Text style={styles.success}>{success}</Text>}
 
         <Button
           label="Publier"
@@ -161,6 +156,5 @@ const styles = StyleSheet.create({
   fileName: { color: COLORS.text, fontWeight: "600" },
   fileMeta: { color: COLORS.muted, fontSize: 13 },
   error: { color: COLORS.danger },
-  success: { color: COLORS.text, fontWeight: "600" },
   publish: { alignSelf: "flex-start", paddingHorizontal: 24 },
 });
