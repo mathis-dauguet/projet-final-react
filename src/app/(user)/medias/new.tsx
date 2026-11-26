@@ -1,22 +1,15 @@
-import { Image } from "expo-image";
 import { router } from "expo-router";
 import Head from "expo-router/head";
 import { useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { TYPE_LABELS } from "@/components/MediaCard";
+import { MediaFilePreview } from "@/components/MediaFilePreview";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { MEDIA_NAME_MAX } from "@/constants/media-rules";
 import { COLORS, RADIUS } from "@/constants/theme";
 import { useUserRole } from "@/hooks/useUserRole";
 import { pickAudio, pickImageOrVideo, publishMedia, type PickedFile } from "@/services/media-upload";
-
-function formatSize(bytes: number | null): string {
-  if (bytes === null) return "taille inconnue";
-  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} Ko`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} Mo`;
-}
 
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : "Une erreur est survenue. Réessayez.";
@@ -92,21 +85,12 @@ export default function NewMediaScreen() {
         </View>
 
         {file && (
-          <View style={styles.preview}>
-            {file.type === "image" ? (
-              <Image source={file.uri} style={styles.previewImage} contentFit="contain" />
-            ) : (
-              <View style={[styles.previewImage, styles.placeholder]}>
-                <Text style={styles.placeholderText}>{TYPE_LABELS[file.type]}</Text>
-              </View>
-            )}
-            <Text style={styles.fileName} numberOfLines={1}>
-              {file.name}
-            </Text>
-            <Text style={styles.fileMeta}>
-              {TYPE_LABELS[file.type]} · {formatSize(file.size)}
-            </Text>
-          </View>
+          <MediaFilePreview
+            imageUri={file.type === "image" ? file.uri : null}
+            type={file.type}
+            name={file.name}
+            size={file.size}
+          />
         )}
 
         {error && <Text style={styles.error}>{error}</Text>}
@@ -142,19 +126,6 @@ const styles = StyleSheet.create({
   title: { color: COLORS.text, fontSize: 26, fontWeight: "800" },
   subtitle: { color: COLORS.muted, fontSize: 14 },
   pickers: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
-  preview: {
-    gap: 6,
-    padding: 12,
-    backgroundColor: COLORS.surfaceAlt,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: RADIUS.md,
-  },
-  previewImage: { width: "100%", height: 240, borderRadius: RADIUS.sm },
-  placeholder: { backgroundColor: COLORS.placeholder, alignItems: "center", justifyContent: "center" },
-  placeholderText: { color: COLORS.text, fontWeight: "700", fontSize: 18 },
-  fileName: { color: COLORS.text, fontWeight: "600" },
-  fileMeta: { color: COLORS.muted, fontSize: 13 },
   error: { color: COLORS.danger },
   publish: { alignSelf: "flex-start", paddingHorizontal: 24 },
 });
