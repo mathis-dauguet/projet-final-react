@@ -46,3 +46,5 @@ example
 
 /uploads/medias/*
 !/uploads/medias/.gitkeep
+
+.env.server

@@ -13,3 +13,5 @@ android
 Dockerfile
 .dockerignore
 uploads
+
+.env.server

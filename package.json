@@ -56,7 +56,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "api": "node --watch --env-file-if-exists=.env.server.local server.mts"
+    "api": "node --watch --env-file-if-exists=.env.server server.mts"
   },
   "private": true
 }
