@@ -74,6 +74,11 @@ export default function MyMediasScreen() {
           <View style={styles.item}>
             <MediaCard media={item} variant="list" />
             <View style={styles.actions}>
+              <Button
+                label="Modifier"
+                variant="secondary"
+                onPress={() => router.push({ pathname: "/medias/[id]/edit", params: { id: item.id } })}
+              />
               <Button label="Supprimer" variant="danger" onPress={() => askDelete(item)} />
             </View>
           </View>
