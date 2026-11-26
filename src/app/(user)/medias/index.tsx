@@ -7,11 +7,13 @@ import { MediaCard } from "@/components/MediaCard";
 import { Button } from "@/components/ui/Button";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { COLORS, CONTENT_MAX_WIDTH, RADIUS } from "@/constants/theme";
+import { useAuth } from "@/hooks/useAuth";
 import { useMyMedias } from "@/hooks/useMyMedias";
 import { useUserRole } from "@/hooks/useUserRole";
 import type { Media } from "@/models/media";
 
 export default function MyMediasScreen() {
+  const { user } = useAuth();
   const { role, loading: roleLoading } = useUserRole();
   const { medias, loading, error, hasMore, loadingMore, loadMore, remove } = useMyMedias();
   const [toDelete, setToDelete] = useState<Media | null>(null);
@@ -67,7 +69,16 @@ export default function MyMediasScreen() {
               <Text style={styles.title}>Mes médias</Text>
               <Text style={styles.subtitle}>Les médias que vous avez publiés, du plus récent au plus ancien.</Text>
             </View>
-            <Button label="Publier un média" onPress={() => router.push("/medias/new")} />
+            <View style={styles.heroActions}>
+              {user && (
+                <Button
+                  label="Voir mon profil public"
+                  variant="ghost"
+                  onPress={() => router.push({ pathname: "/photographers/[id]", params: { id: user.uid } })}
+                />
+              )}
+              <Button label="Publier un média" onPress={() => router.push("/medias/new")} />
+            </View>
           </View>
         }
         renderItem={({ item }) => (
@@ -134,6 +145,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   heroText: { gap: 6, flexShrink: 1 },
+  heroActions: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   title: { color: COLORS.text, fontSize: 32, fontWeight: "800" },
   subtitle: { color: COLORS.muted, fontSize: 15 },
   item: {
