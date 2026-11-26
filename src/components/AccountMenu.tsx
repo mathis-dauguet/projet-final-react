@@ -2,6 +2,7 @@ import { router, type Href } from "expo-router";
 import { useRef, useState, type ComponentRef, type ReactNode } from "react";
 import { Dimensions, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { COLORS, RADIUS } from "@/constants/theme";
+import { useAuth } from "@/hooks/useAuth";
 import { useFavorites } from "@/hooks/useFavorites";
 import { signOut } from "@/services/auth-service";
 
@@ -11,6 +12,7 @@ interface Anchor {
 }
 
 export function AccountMenu() {
+  const { isAdmin } = useAuth();
   const { favorites } = useFavorites();
   const buttonRef = useRef<ComponentRef<typeof Pressable>>(null);
   const [anchor, setAnchor] = useState<Anchor | null>(null);
@@ -47,6 +49,11 @@ export function AccountMenu() {
             <MenuItem onPress={() => go("/account")}>
               <Text style={styles.itemLabel}>Mon compte</Text>
             </MenuItem>
+            {isAdmin && (
+              <MenuItem onPress={() => go("/admin/users")}>
+                <Text style={styles.itemLabel}>Gérer les utilisateurs</Text>
+              </MenuItem>
+            )}
             <View style={styles.divider} />
             <MenuItem
               onPress={() => {

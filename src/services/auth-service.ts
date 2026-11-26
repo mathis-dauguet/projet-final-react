@@ -6,25 +6,36 @@ import {
   signOut as firebaseSignOut,
   User,
 } from "firebase/auth";
-import { AppUser } from "@/models/user";
 import { auth } from "@/services/firebase";
+import { ensureOwnProfile, getUser, updateOwnName } from "@/services/users-service";
 
-function toAppUser(user: User): AppUser {
+export type AuthAccount = { uid: string; email: string };
+
+const DISABLED_ACCOUNT = "app/account-disabled";
+
+function toAccount(user: User): AuthAccount {
   return { uid: user.uid, email: user.email ?? "" };
 }
 
-export function subscribeToAuth(onChange: (user: AppUser | null) => void) {
-  return onAuthStateChanged(auth, (user) =>
-    onChange(user ? toAppUser(user) : null),
-  );
+export function subscribeToAuth(onChange: (account: AuthAccount | null) => void) {
+  return onAuthStateChanged(auth, (user) => onChange(user ? toAccount(user) : null));
 }
 
-export async function signUp(email: string, password: string) {
-  await createUserWithEmailAndPassword(auth, email, password);
+// RG-USR-01/02 : le profil créé à l'inscription a le rôle `user`
+export async function signUp(email: string, password: string, name = "") {
+  const { user } = await createUserWithEmailAndPassword(auth, email, password);
+  await ensureOwnProfile(user.uid, email);
+  if (name.trim()) await updateOwnName(user.uid, name);
 }
 
+// RG-USR-10 : un compte supprimé (deleted_at) ne peut plus se connecter
 export async function signIn(email: string, password: string) {
-  await signInWithEmailAndPassword(auth, email, password);
+  const { user } = await signInWithEmailAndPassword(auth, email, password);
+  const profile = await getUser(user.uid);
+  if (profile?.deleted_at) {
+    await firebaseSignOut(auth);
+    throw new FirebaseError(DISABLED_ACCOUNT, "Compte désactivé");
+  }
 }
 
 export async function signOut() {
@@ -40,6 +51,10 @@ export function authErrorMessage(error: unknown): string {
       return "E-mail ou mot de passe incorrect.";
     case "auth/email-already-in-use":
       return "Un compte existe déjà avec cette adresse.";
+    case "permission-denied":
+      return "Action non autorisée.";
+    case DISABLED_ACCOUNT:
+      return "Ce compte a été désactivé par un administrateur.";
     case "auth/weak-password":
       return "Mot de passe trop court : 6 caractères au moins.";
     default:

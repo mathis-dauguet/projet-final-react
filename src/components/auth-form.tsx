@@ -7,10 +7,12 @@ import { authErrorMessage } from "@/services/auth-service";
 
 type AuthFormProps = {
   submitLabel: string;
-  onSubmit: (email: string, password: string) => Promise<void>;
+  onSubmit: (email: string, password: string, name: string) => Promise<void>;
+  withName?: boolean;
 };
 
-export function AuthForm({ submitLabel, onSubmit }: AuthFormProps) {
+export function AuthForm({ submitLabel, onSubmit, withName = false }: AuthFormProps) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -20,7 +22,7 @@ export function AuthForm({ submitLabel, onSubmit }: AuthFormProps) {
     setError("");
     setSending(true);
     try {
-      await onSubmit(email.trim(), password);
+      await onSubmit(email.trim(), password, name.trim());
     } catch (e) {
       setError(authErrorMessage(e));
     } finally {
@@ -30,6 +32,9 @@ export function AuthForm({ submitLabel, onSubmit }: AuthFormProps) {
 
   return (
     <View style={styles.form}>
+      {withName && (
+        <TextField label="Nom" value={name} onChangeText={setName} placeholder="Votre nom" autoComplete="name" />
+      )}
       <TextField
         label="E-mail"
         value={email}

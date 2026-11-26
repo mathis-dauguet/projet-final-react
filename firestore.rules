@@ -1,0 +1,63 @@
+rules_version = '2';
+
+// Règles Firestore de Cosmos Gallery — à copier dans la console Firebase (Firestore > Règles)
+// Voir _docs/roles-et-permissions.md : l'app cache les boutons, ces règles bloquent réellement l'accès.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function profile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    // Admin = profil avec role "admin" et non supprimé
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && profile().role == 'admin'
+        && profile().deleted_at == null;
+    }
+
+    function validRole(role) {
+      return role in ['user', 'admin'];
+    }
+
+    match /users/{uid} {
+      allow read: if isSelf(uid) || isAdmin();
+
+      // RG-USR-01/02 : on crée son propre profil avec le rôle `user` ; seul un admin choisit un autre rôle
+      allow create: if (
+          isSelf(uid)
+          && request.resource.data.role == 'user'
+          && request.resource.data.deleted_at == null
+          && request.resource.data.email == request.auth.token.email
+        ) || (isAdmin() && validRole(request.resource.data.role));
+
+      // L'utilisateur ne peut modifier que son nom ; l'admin peut changer nom, rôle et deleted_at
+      // RG-USR-12 : un admin ne peut pas modifier son propre rôle ni se supprimer
+      allow update: if (
+          isSelf(uid)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'updated_at'])
+        ) || (
+          isAdmin()
+          && validRole(request.resource.data.role)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'role', 'deleted_at', 'updated_at'])
+          && (!isSelf(uid) || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'updated_at']))
+        );
+
+      // RG-USR-10 : suppression logique uniquement
+      allow delete: if false;
+
+      match /favorites/{favoriteId} {
+        allow read, write: if isSelf(uid);
+      }
+    }
+  }
+}

@@ -24,7 +24,7 @@ export default function RootLayout() {
 }
 
 function RootStack() {
-  const { user, initializing } = useAuth();
+  const { user, isAdmin, initializing } = useAuth();
 
   if (initializing) {
     return (
@@ -33,6 +33,16 @@ function RootStack() {
       </View>
     );
   }
+
+  const spaceOptions = {
+    title: "Espace utilisateur",
+    headerTitle: () => <Logo />,
+    headerRight: () => (
+      <View style={styles.headerRight}>
+        <HeaderActions />
+      </View>
+    ),
+  };
 
   return (
     <Stack
@@ -49,18 +59,10 @@ function RootStack() {
     >
       <Stack.Screen name="index" options={{ title: "Catalogue", headerTitle: () => <Logo /> }} />
       <Stack.Protected guard={user !== null}>
-        <Stack.Screen
-          name="(user)"
-          options={{
-            title: "Espace utilisateur",
-            headerTitle: () => <Logo />,
-            headerRight: () => (
-              <View style={styles.headerRight}>
-                <HeaderActions />
-              </View>
-            ),
-          }}
-        />
+        <Stack.Screen name="(user)" options={spaceOptions} />
+      </Stack.Protected>
+      <Stack.Protected guard={isAdmin}>
+        <Stack.Screen name="admin" options={{ ...spaceOptions, title: "Administration" }} />
       </Stack.Protected>
       <Stack.Protected guard={user === null}>
         <Stack.Screen name="(auth)/sign-in" options={{ title: "Connexion", headerTitle: () => <Logo /> }} />
