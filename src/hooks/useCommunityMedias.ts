@@ -2,11 +2,12 @@ import type { QueryDocumentSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import type { Media, MediaType } from "@/models/media";
-import { deleteMedia, listMedias } from "@/services/community-medias";
+import { deleteMedia, listMedias, restoreMedia } from "@/services/community-medias";
 
 export interface CommunityFilters {
   authorId?: string;
   type?: MediaType;
+  includeDeleted?: boolean;
 }
 
 interface State {
@@ -58,9 +59,29 @@ export function useCommunityMedias(filters: CommunityFilters | null) {
     }
   }
 
+  // Si la liste inclut les médias supprimés (vue admin), le média reste affiché comme supprimé
   async function remove(id: string) {
     await deleteMedia(id);
-    setState((current) => current && { ...current, medias: current.medias.filter((media) => media.id !== id) });
+    setState(
+      (current) =>
+        current && {
+          ...current,
+          medias: filters?.includeDeleted
+            ? current.medias.map((media) => (media.id === id ? { ...media, deleted_at: new Date() } : media))
+            : current.medias.filter((media) => media.id !== id),
+        },
+    );
+  }
+
+  async function restore(id: string) {
+    await restoreMedia(id);
+    setState(
+      (current) =>
+        current && {
+          ...current,
+          medias: current.medias.map((media) => (media.id === id ? { ...media, deleted_at: null } : media)),
+        },
+    );
   }
 
   return {
@@ -71,5 +92,6 @@ export function useCommunityMedias(filters: CommunityFilters | null) {
     loadingMore,
     loadMore,
     remove,
+    restore,
   };
 }
